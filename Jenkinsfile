@@ -1,7 +1,8 @@
 node{
       
       stage('SCM Checkout'){
-         git 'https://github.com/rajnikhattarrsinha/Java-Demo-Application'
+         git 'https://github.com/hkalyana/Java-Demo-Application'
+            
       }
       
       stage('Build'){
@@ -16,14 +17,14 @@ node{
       }
       
       stage('Build Docker Image'){
-         sh 'docker build -t rajnikhattarrsinha/javademoapp_$JOB_NAME:$BUILD_NUMBER .'
+         sh 'docker build -t hkalyana/javademoapp_$JOB_NAME:$BUILD_NUMBER .'
       }  
    
       stage('Publish Docker Image'){
          withCredentials([string(credentialsId: 'dockerpwd', variable: 'dockerPWD')]) {
-              sh "docker login -u rajnikhattarrsinha -p ${dockerPWD}"
+              sh "docker login -u hkalyana -p ${dockerpwdhkalyana}"
          }
-        sh 'docker push rajnikhattarrsinha/javademoapp_$JOB_NAME:$BUILD_NUMBER'
+        sh 'docker push hkalyana/javademoapp_$JOB_NAME:$BUILD_NUMBER'
         sh "sed -i.bak 's/#BUILD-NUMBER#/$BUILD_NUMBER/' deployment.yaml"
         sh "sed -i.bak 's/#JOB-NAME#/$JOB_NAME/' deployment.yaml"
       }
@@ -46,10 +47,10 @@ node{
       // ********* For AWS Cluster**************************
       stage('Deploy'){
          def k8Apply= "kubectl apply -f deployment.yaml" 
-         withCredentials([string(credentialsId: 'k8pwdrajni', variable: 'k8PWD')]) {
-             sh "sshpass -p ${k8PWD} ssh -o StrictHostKeyChecking=no devops@54.196.52.131"  
-             sh "sshpass -p ${k8PWD} scp -r deployment.yaml devops@54.196.52.131:/home/devops" 
-             sh "sshpass -p ${k8PWD} ssh -o StrictHostKeyChecking=no devops@54.196.52.131 ${k8Apply}"
+         withCredentials([string(credentialsId: 'haproxyhkalyana', variable: 'haproxyhkalyana')]) {
+             sh "sshpass -p ${haproxyhkalyana} ssh -o StrictHostKeyChecking=no harish@52.187.5.138"  
+             sh "sshpass -p ${haproxyhkalyana} scp -r deployment.yaml harish@52.187.5.138:/home/harish" 
+             sh "sshpass -p ${haproxyhkalyana} ssh -o StrictHostKeyChecking=no harish@52.187.5.138 ${k8Apply}"
          }
        }
         
