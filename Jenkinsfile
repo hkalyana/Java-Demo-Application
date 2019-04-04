@@ -21,7 +21,7 @@ node{
       }  
    
       stage('Publish Docker Image'){
-         withCredentials([string(credentialsId: 'dockerpwd', variable: 'dockerPWD')]) {
+         withCredentials([string(credentialsId: 'dockerpwdhkalyana', variable: 'dockerpwdhkalyana')]) {
               sh "docker login -u hkalyana -p ${dockerpwdhkalyana}"
          }
         sh 'docker push hkalyana/javademoapp_$JOB_NAME:$BUILD_NUMBER'
